@@ -867,3 +867,145 @@ async function loadTennisSection() {
 
 // Jalankan fungsi
 loadTennisSection();
+
+
+// ==========================================
+// SANITY CMS - LOUNGE & FACILITIES
+// ==========================================
+
+async function loadLoungeSection() {
+    const PROJECT_ID = 'tly2hu5w';
+    const DATASET = 'production';
+    const API_VERSION = '2025-01-01';
+
+    const query = `*[_type == "loungeSection"][0]{
+        label,
+        heading,
+        description,
+        image{
+            asset->{
+                url
+            }
+        },
+        facilities[]{
+            name,
+            description
+        }
+    }`;
+
+    const endpoint =
+        `https://${PROJECT_ID}.api.sanity.io/v${API_VERSION}/data/query/${DATASET}?query=${encodeURIComponent(query)}`;
+
+    try {
+        const response = await fetch(endpoint);
+
+        if (!response.ok) {
+            throw new Error(`Sanity API Error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const data = result.result;
+
+        if (!data) {
+            console.warn('Data Lounge belum tersedia di Sanity.');
+            return;
+        }
+
+        console.log('Lounge & Facilities berhasil dimuat:', data);
+
+        // Helper untuk mengubah teks
+        const setText = (selector, value) => {
+            const element = document.querySelector(selector);
+
+            if (element && value) {
+                element.textContent = value;
+            }
+        };
+
+        // Label
+        setText('.lounge-hero-overlay .label', data.label);
+
+        // Judul
+        const heading = document.querySelector(
+            '.lounge-hero-overlay .section-heading'
+        );
+
+        if (heading && data.heading) {
+            const escapeHTML = (text) => text.replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            })[char]);
+
+            heading.innerHTML = escapeHTML(data.heading)
+                .replace(/\n/g, '<br>');
+        }
+
+        // Deskripsi
+        setText(
+            '.lounge-hero-overlay .section-desc',
+            data.description
+        );
+
+        // Gambar utama Lounge
+        const loungeImage = document.querySelector('.lounge-hero img');
+
+        if (loungeImage && data.image?.asset?.url) {
+            loungeImage.src = data.image.asset.url;
+            loungeImage.alt = data.heading || 'Lounge Zamzam';
+        }
+
+        // Daftar fasilitas
+        const facilitiesContainer = document.querySelector(
+            '.lounge-facilities'
+        );
+
+        if (facilitiesContainer && Array.isArray(data.facilities)) {
+            const template = facilitiesContainer.querySelector(
+                '.lounge-facility'
+            );
+
+            if (template) {
+                facilitiesContainer.innerHTML = '';
+
+                data.facilities.forEach((facility) => {
+                    const item = template.cloneNode(true);
+
+                    const nameElement = item.querySelector(
+                        '.lounge-facility-name'
+                    );
+
+                    const descElement = item.querySelector(
+                        '.lounge-facility-desc'
+                    );
+
+                    if (nameElement) {
+                        nameElement.textContent = facility.name || '';
+                    }
+
+                    if (descElement) {
+                        descElement.textContent =
+                            facility.description || '';
+                    }
+
+                    facilitiesContainer.appendChild(item);
+                });
+            } else {
+                console.warn(
+                    'Template .lounge-facility tidak ditemukan.'
+                );
+            }
+        }
+
+    } catch (error) {
+        console.error(
+            'Gagal memuat Lounge & Facilities:',
+            error
+        );
+    }
+}
+
+// Jalankan fungsi
+loadLoungeSection();

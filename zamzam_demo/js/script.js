@@ -1009,3 +1009,84 @@ async function loadLoungeSection() {
 
 // Jalankan fungsi
 loadLoungeSection();
+// ==========================================
+// SANITY CMS - RESERVATION SECTION
+// ==========================================
+
+async function loadReservationSection() {
+    const PROJECT_ID = 'tly2hu5w';
+    const DATASET = 'production';
+    const API_VERSION = '2025-01-01';
+
+    const query = `*[_type == "reservationSection"][0]{
+        label,
+        heading,
+        description,
+        note
+    }`;
+
+    const endpoint =
+        `https://${PROJECT_ID}.api.sanity.io/v${API_VERSION}/data/query/${DATASET}?query=${encodeURIComponent(query)}`;
+
+    try {
+        const response = await fetch(endpoint);
+
+        if (!response.ok) {
+            throw new Error(`Sanity API Error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const data = result.result;
+
+        if (!data) {
+            console.warn('Data Reservation belum tersedia di Sanity.');
+            return;
+        }
+
+        console.log('Reservation berhasil dimuat:', data);
+
+        const setText = (selector, value) => {
+            const element = document.querySelector(selector);
+
+            if (element && value) {
+                element.textContent = value;
+            }
+        };
+
+        // Label
+        setText('.reservation-content .label', data.label);
+
+        // Deskripsi
+        setText(
+            '.reservation-content .section-desc',
+            data.description
+        );
+
+        // Catatan
+        setText('.reservation-note', data.note);
+
+        // Judul
+        const heading = document.querySelector(
+            '.reservation-content .section-heading'
+        );
+
+        if (heading && data.heading) {
+            const escapeHTML = (text) => text.replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            })[char]);
+
+            heading.innerHTML = escapeHTML(data.heading)
+                .replace(/\n/g, '<br>');
+        }
+
+    } catch (error) {
+        console.error('Gagal memuat Reservation:', error);
+    }
+}
+
+// Jalankan fungsi
+loadReservationSection();

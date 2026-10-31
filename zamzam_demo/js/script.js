@@ -6,6 +6,54 @@
 document.addEventListener('DOMContentLoaded', () => {
   'use strict';
 
+  
+  // =========================
+  // SANITY CMS CONNECTION
+  // =========================
+  async function loadSanityContent() {
+    try {
+      const projectId = 'tly2hu5w';
+      const dataset = 'production';
+      const apiVersion = '2025-01-01';
+
+      const query = encodeURIComponent(
+        `*[_type == "siteSettings"][0]`
+      );
+
+      const url =
+        `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}?query=${query}`;
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`Sanity API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const settings = data.result;
+
+      if (!settings) {
+        console.warn('Konten Sanity belum tersedia.');
+        return;
+      }
+
+      // HERO LABEL
+      const heroLabel = document.querySelector('.hero-content .label');
+
+      if (heroLabel && settings.heroLabel) {
+        heroLabel.textContent = settings.heroLabel;
+      }
+
+      console.log('Sanity CMS berhasil terhubung!', settings);
+
+    } catch (error) {
+      console.error('Gagal mengambil data Sanity:', error);
+    }
+  }
+
+  loadSanityContent();
+
+
   /* =========================
      ELEMENTS
      ========================= */
@@ -229,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       message += `\n\nMohon konfirmasinya, terima kasih!`;
 
-      const waNumber = '6287822665674';
+      const waNumber = window.zamzamWhatsApp || '6287822665674';
       const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
 
       // Redirect ke WA - user tinggal kirim
@@ -425,3 +473,397 @@ document.addEventListener('DOMContentLoaded', () => {
   handleNavScroll();
   updateActiveNav();
 });
+
+
+/* ==========================================
+   SANITY CMS - ZAMZAM WEBSITE CONTENT
+   ========================================== */
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const PROJECT_ID = 'tly2hu5w';
+  const DATASET = 'production';
+  const API_VERSION = '2025-01-01';
+
+  const query = `*[_type == "siteSettings"][0]{
+    siteName,
+    heroLabel,
+    heroHeading,
+    heroDescription,
+    heroImage{
+      asset->{url}
+    },
+    heroServices,
+    openingHours,
+    whatsappNumber,
+    email,
+    instagram,
+    facebook,
+    address,
+    googleMapsUrl
+  }`;
+
+  const endpoint =
+    `https://${PROJECT_ID}.api.sanity.io/v${API_VERSION}/data/query/${DATASET}?query=${encodeURIComponent(query)}`;
+
+  try {
+    const response = await fetch(endpoint);
+
+    if (!response.ok) {
+      throw new Error(`Sanity API error: ${response.status}`);
+    }
+
+    const result = await response.json();
+    const data = result.result;
+
+    if (!data) {
+      console.warn('Data siteSettings belum tersedia.');
+      return;
+    }
+
+    console.log('Sanity CMS berhasil terhubung!', data);
+
+    // Helper untuk mengubah teks dengan aman
+    const setText = (selector, value) => {
+      const element = document.querySelector(selector);
+      if (element && value) {
+        element.textContent = value;
+      }
+    };
+
+    // SITE NAME
+    if (data.siteName) {
+      document.title = `${data.siteName} — Modern Arabian Luxury`;
+
+      const nameParts = data.siteName.split(' ');
+      setText('.nav-brand-name', nameParts.shift().toUpperCase());
+      setText('.nav-brand-sub', nameParts.join(' '));
+
+      setText('.footer-brand-name', data.siteName.split(' ')[0].toUpperCase());
+      setText('.footer-brand-sub', data.siteName.split(' ').slice(1).join(' '));
+    }
+
+    // HERO SECTION
+    setText('.hero-content .label', data.heroLabel);
+    setText('.hero-desc', data.heroDescription);
+    setText('.hero-services', data.heroServices);
+    setText('.hero-hours', data.openingHours);
+
+    // Judul hero: pertahankan baris baru dan highlight
+    const heroHeading = document.querySelector('.hero-heading');
+
+    if (heroHeading && data.heroHeading) {
+      const escapeHTML = (text) =>
+        text.replace(/[&<>"']/g, char => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        })[char]);
+
+      const heading = escapeHTML(data.heroHeading);
+
+      heroHeading.innerHTML = heading
+        .replace(/Sebuah Momen\./g, '<span class="highlight">Sebuah Momen.</span>')
+        .replace(/\n/g, '<br>');
+    }
+
+    // HERO IMAGE
+    if (data.heroImage?.asset?.url) {
+      const heroImage = document.querySelector('.hero-bg img');
+
+      if (heroImage) {
+        heroImage.src = data.heroImage.asset.url;
+      }
+    }
+
+    // OPENING HOURS DI FOOTER
+    if (data.openingHours) {
+      const footerHours = document.querySelector('.footer-hours');
+
+      if (footerHours) {
+        const strong = footerHours.querySelector('strong');
+
+        footerHours.textContent = data.openingHours;
+
+        if (strong) {
+          footerHours.prepend(strong);
+        }
+      }
+    }
+
+    // LOCATION
+    if (data.address) {
+      const addressElement = document.querySelector('.location-details p');
+
+      if (addressElement) {
+        addressElement.textContent = data.address;
+      }
+    }
+
+    if (data.googleMapsUrl) {
+      const mapsButton = document.querySelector('.location-button');
+
+      if (mapsButton) {
+        mapsButton.href = data.googleMapsUrl;
+      }
+    }
+
+    // CONTACT
+    if (data.email) {
+      const emailLink = document.querySelector('.footer-col a[href^="mailto:"]');
+
+      if (emailLink) {
+        emailLink.href = `mailto:${data.email}`;
+        emailLink.textContent = data.email;
+      }
+    }
+
+    // SOCIAL MEDIA
+    if (data.instagram) {
+      const instagramLink = document.querySelector(
+        '.footer-col a[aria-label="Instagram Zamzam"]'
+      );
+
+      if (instagramLink) {
+        instagramLink.href = data.instagram;
+        instagramLink.target = '_blank';
+        instagramLink.rel = 'noopener noreferrer';
+      }
+    }
+
+    if (data.facebook) {
+      const facebookLink = document.querySelector(
+        '.footer-col a[aria-label="Facebook Zamzam"]'
+      );
+
+      if (facebookLink) {
+        facebookLink.href = data.facebook;
+        facebookLink.target = '_blank';
+        facebookLink.rel = 'noopener noreferrer';
+      }
+    }
+
+    // NOMOR WHATSAPP RESERVASI
+    if (data.whatsappNumber) {
+      window.zamzamWhatsApp = data.whatsappNumber.replace(/\D/g, '');
+    }
+
+  } catch (error) {
+    console.error('Gagal mengambil data Sanity:', error);
+  }
+});
+
+
+// ==========================================
+// SANITY CMS - ABOUT SECTION
+// ==========================================
+
+async function loadAboutSection() {
+    const PROJECT_ID = 'tly2hu5w';
+    const DATASET = 'production';
+    const API_VERSION = '2025-01-01';
+
+    const query = `*[_type == "aboutSection"][0]{
+        label,
+        heading,
+        description,
+        image{
+            asset->{
+                url
+            }
+        },
+        estYear,
+        estText
+    }`;
+
+    const endpoint =
+        `https://${PROJECT_ID}.api.sanity.io/v${API_VERSION}/data/query/${DATASET}?query=${encodeURIComponent(query)}`;
+
+    try {
+        const response = await fetch(endpoint);
+
+        if (!response.ok) {
+            throw new Error(`Sanity API Error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const data = result.result;
+
+        if (!data) {
+            console.warn('Data About Section belum tersedia di Sanity.');
+            return;
+        }
+
+        console.log('About Section berhasil dimuat:', data);
+
+        // Mengubah teks
+        const setText = (selector, value) => {
+            const element = document.querySelector(selector);
+
+            if (element && value) {
+                element.textContent = value;
+            }
+        };
+
+        setText('.about-content .label', data.label);
+        setText('.about-content .section-desc', data.description);
+        setText('.about-est-year', data.estYear ? `EST. ${data.estYear}` : '');
+        setText('.about-est-text', data.estText);
+
+        // Mengubah judul
+        const heading = document.querySelector(
+            '.about-content .section-heading'
+        );
+
+        if (heading && data.heading) {
+            const escapeHTML = (text) => text.replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            })[char]);
+
+            heading.innerHTML = escapeHTML(data.heading)
+                .replace(/\n/g, '<br>');
+        }
+
+        // Mengubah gambar
+        const aboutImage = document.querySelector('.about-image img');
+
+        if (aboutImage && data.image?.asset?.url) {
+            aboutImage.src = data.image.asset.url;
+            aboutImage.alt = data.heading || 'Tentang Zamzam';
+        }
+
+    } catch (error) {
+        console.error('Gagal memuat About Section:', error);
+    }
+}
+
+// Jalankan ketika halaman siap
+loadAboutSection();
+
+
+ // ==========================================
+ // SANITY CMS - TENNIS COURT SECTION
+ // ==========================================
+
+async function loadTennisSection() {
+    const PROJECT_ID = 'tly2hu5w';
+    const DATASET = 'production';
+    const API_VERSION = '2025-01-01';
+
+    const query = `*[_type == "tennisSection"][0]{
+        label,
+        heading,
+        description,
+        image{
+            asset->{
+                url
+            }
+        },
+        facilities[]{
+            label,
+            value
+        }
+    }`;
+
+    const endpoint =
+        `https://${PROJECT_ID}.api.sanity.io/v${API_VERSION}/data/query/${DATASET}?query=${encodeURIComponent(query)}`;
+
+    try {
+        const response = await fetch(endpoint);
+
+        if (!response.ok) {
+            throw new Error(`Sanity API Error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const data = result.result;
+
+        if (!data) {
+            console.warn('Data Tennis Court belum tersedia di Sanity.');
+            return;
+        }
+
+        console.log('Tennis Court berhasil dimuat:', data);
+
+        // Mengubah teks
+        const setText = (selector, value) => {
+            const element = document.querySelector(selector);
+
+            if (element && value) {
+                element.textContent = value;
+            }
+        };
+
+        setText('.tennis-content .label', data.label);
+        setText('.tennis-content .section-desc', data.description);
+
+        // Mengubah judul
+        const heading = document.querySelector(
+            '.tennis-content .section-heading'
+        );
+
+        if (heading && data.heading) {
+            const escapeHTML = (text) => text.replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            })[char]);
+
+            heading.innerHTML = escapeHTML(data.heading)
+                .replace(/\n/g, '<br>');
+        }
+
+        // Mengubah gambar
+        const tennisImage = document.querySelector('.tennis-image img');
+
+        if (tennisImage && data.image?.asset?.url) {
+            tennisImage.src = data.image.asset.url;
+            tennisImage.alt = data.heading || 'Tennis Court Zamzam';
+        }
+
+        // Mengubah informasi Tennis Court
+        const infoContainer = document.querySelector('.tennis-info');
+
+        if (infoContainer && Array.isArray(data.facilities)) {
+            const template = infoContainer.querySelector('.tennis-info-item');
+
+            if (template) {
+                infoContainer.innerHTML = '';
+
+                data.facilities.forEach((facility) => {
+                    const item = template.cloneNode(true);
+                    const children = item.children;
+
+                    // Anak pertama = label
+                    // Anak kedua = value
+                    if (children[0]) {
+                        children[0].textContent = facility.label || '';
+                    }
+
+                    if (children[1]) {
+                        children[1].textContent = facility.value || '';
+                    }
+
+                    infoContainer.appendChild(item);
+                });
+            } else {
+                console.warn(
+                    'Template .tennis-info-item tidak ditemukan.'
+                );
+            }
+        }
+
+    } catch (error) {
+        console.error('Gagal memuat Tennis Court:', error);
+    }
+}
+
+// Jalankan fungsi
+loadTennisSection();

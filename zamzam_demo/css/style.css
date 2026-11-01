@@ -1901,3 +1901,205 @@ body.modal-open {
     grid-column: 2;
   }
 }
+
+
+/* ==========================================
+   MENU CATALOG - COMPACT CARD DESIGN
+========================================== */
+
+.menu-catalog {
+  padding: 70px 0 90px;
+}
+
+.menu-categories {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 55px;
+}
+
+.menu-category {
+  margin-bottom: 75px;
+  scroll-margin-top: 110px;
+}
+
+.menu-category-heading {
+  margin-bottom: 30px;
+}
+
+/* Grid menu */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 38px 26px;
+}
+
+/* Card */
+.menu-item {
+  width: 100%;
+  min-width: 0;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* Gambar */
+.menu-item-image {
+  width: 100%;
+  height: 230px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background: #f1f1ed;
+}
+
+.menu-item-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.menu-item:hover .menu-item-image img {
+  transform: scale(1.04);
+}
+
+/* Harga dan kategori */
+.menu-item-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.menu-item-category {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.menu-item-price {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* Nama menu */
+.menu-item-name {
+  font-size: 22px;
+  line-height: 1.3;
+  margin: 0 0 9px;
+}
+
+/* Deskripsi */
+.menu-item-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #777;
+  margin: 0;
+}
+
+/* Signature tetap mengikuti grid normal */
+.menu-grid-featured {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .menu-grid,
+  .menu-grid-featured {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 22px;
+  }
+
+  .menu-item-image {
+    height: 220px;
+  }
+}
+
+/* HP */
+@media (max-width: 600px) {
+  .menu-catalog {
+    padding: 45px 0 65px;
+  }
+
+  .menu-categories {
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 38px;
+  }
+
+  .menu-category {
+    margin-bottom: 55px;
+  }
+
+  .menu-grid,
+  .menu-grid-featured {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 14px;
+  }
+
+  .menu-item-image {
+    height: 155px;
+    margin-bottom: 12px;
+  }
+
+  .menu-item-meta {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .menu-item-category {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+
+  .menu-item-price {
+    font-size: 11px;
+  }
+
+  .menu-item-name {
+    font-size: 17px;
+  }
+
+  .menu-item-desc {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+}
+
+/* MENU UNGGULAN */
+
+.menu-featured-section {
+  margin-bottom: 85px;
+  padding-bottom: 65px;
+  border-bottom: 1px solid rgba(20, 77, 52, 0.15);
+}
+
+.menu-featured-section .menu-category-heading {
+  margin-bottom: 30px;
+}
+
+.menu-featured-section .menu-grid-featured {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px;
+}
+
+@media (max-width: 1024px) {
+  .menu-featured-section .menu-grid-featured {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .menu-featured-section {
+    margin-bottom: 55px;
+    padding-bottom: 45px;
+  }
+
+  .menu-featured-section .menu-grid-featured {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 14px;
+  }
+}

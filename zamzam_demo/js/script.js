@@ -461,9 +461,68 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  /* =========================
+     MENU DETAIL MODAL
+     ========================= */
+  const menuDetailModal = document.getElementById('menu-detail-modal');
+  const menuItems = document.querySelectorAll('.menu-item, .menu-list-item');
+  const menuDetailImage = document.getElementById('menu-detail-image');
+  const menuDetailCategory = document.getElementById('menu-detail-category');
+  const menuDetailTitle = document.getElementById('menu-detail-title');
+  const menuDetailDescription = document.getElementById('menu-detail-description');
+  const menuDetailPrice = document.getElementById('menu-detail-price');
+
+  function openMenuDetail(item) {
+    if (!menuDetailModal) return;
+
+    const image = item.querySelector('img');
+    const title = item.querySelector('.menu-item-name, .menu-list-content h3');
+    const description = item.querySelector('.menu-item-desc, .menu-list-content p');
+    const price = item.querySelector('.menu-item-price, .menu-list-item > span');
+    const category = item.querySelector('.menu-item-category') ||
+      item.closest('.menu-category')?.querySelector('.menu-category-heading .label');
+
+    if (!image || !title || !description || !price) {
+      console.error('Detail menu tidak lengkap.', item);
+      return;
+    }
+
+    menuDetailImage.src = image.src;
+    menuDetailImage.alt = image.alt;
+    menuDetailCategory.textContent = category ? category.textContent : 'Menu Zamzam';
+    menuDetailTitle.textContent = title.textContent;
+    menuDetailDescription.textContent = description.textContent;
+    menuDetailPrice.textContent = price.textContent;
+    menuDetailModal.classList.add('active');
+    menuDetailModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+  }
+
+  function closeMenuDetail() {
+    if (!menuDetailModal) return;
+    menuDetailModal.classList.remove('active');
+    menuDetailModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+  }
+
+  menuItems.forEach(item => {
+    item.addEventListener('click', () => openMenuDetail(item));
+    item.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openMenuDetail(item);
+      }
+    });
+  });
+
+  document.querySelectorAll('.js-close-menu-detail').forEach(button => {
+    button.addEventListener('click', closeMenuDetail);
+  });
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeAllModals();
+      closeMenuDetail();
     }
   });
 

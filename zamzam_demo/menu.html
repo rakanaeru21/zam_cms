@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Menu Zamzam Cafe & Shisha Lounge — hidangan Timur Tengah, sajian cafe, minuman, dan dessert untuk menemani momen Anda.">
+  <title>Menu — Zamzam Cafe & Shisha Lounge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="menu-page">
+  <header class="navbar scrolled" id="navbar" role="banner">
+    <div class="container">
+      <a href="index.html" class="nav-brand" aria-label="Zamzam Cafe & Shisha Lounge — Beranda">
+        <span class="nav-brand-name">ZAMZAM</span>
+        <span class="nav-brand-sub">Cafe & Shisha Lounge</span>
+      </a>
+      <nav class="nav-links" role="navigation" aria-label="Navigasi utama">
+        <a href="index.html">Beranda</a>
+        <a href="index.html#tentang">Tentang</a>
+        <a href="menu.html" class="active" aria-current="page">Menu</a>
+        <a href="index.html#tennis">Tennis Court</a>
+        <a href="index.html#lokasi">Lokasi</a>
+        <a href="index.html#reservasi">Reservasi</a>
+      </nav>
+      <div class="nav-cta"><a href="index.html#reservasi" class="btn">Reservasi Meja</a></div>
+      <button class="nav-hamburger" aria-label="Buka menu navigasi" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Navigasi mobile">
+    <a href="index.html">Beranda</a>
+    <a href="index.html#tentang">Tentang</a>
+    <a href="menu.html" class="active">Menu</a>
+    <a href="index.html#tennis">Tennis Court</a>
+    <a href="index.html#lokasi">Lokasi</a>
+    <a href="index.html#reservasi">Reservasi</a>
+    <a href="index.html#reservasi" class="btn btn-primary" style="margin-top: 1rem;">Reservasi Meja</a>
+  </div>
+
+  <main>
+    <section class="menu-hero">
+      <div class="container">
+        <div class="menu-hero-content">
+          <span class="label">Menu Zamzam</span>
+          <h1 class="menu-hero-heading">Rasa yang Mengundang<br><span>untuk Dinikmati Bersama.</span></h1>
+          <p class="menu-hero-desc">Jelajahi pilihan hidangan Timur Tengah, sajian cafe, minuman, dan dessert yang disiapkan dengan sepenuh hati.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="menu-catalog" aria-label="Daftar menu">
+      <div class="container">
+        <nav class="menu-categories" aria-label="Kategori menu">
+          <a href="#signature">Signature</a>
+          <a href="#main-course">Main Course</a>
+          <a href="#appetizer">Appetizer</a>
+          <a href="#dessert">Dessert</a>
+          <a href="#beverage">Beverage</a>
+        </nav>
+
+        <div class="menu-category" id="signature">
+          <div class="menu-category-heading"><span class="label">Pilihan Utama</span><h2 class="section-heading">Signature Zamzam</h2><p class="section-desc">Hidangan khas yang menjadi favorit untuk dinikmati bersama.</p></div>
+          <div class="menu-grid menu-grid-featured">
+            <article class="menu-item reveal" tabindex="0" role="button" aria-label="Lihat detail Lamb Mandi">
+              <div class="menu-item-image"><img src="assets/images/lamb-mandi.png" alt="Lamb Mandi dengan nasi basmati dan daging domba"></div>
+              <div class="menu-item-meta"><span class="menu-item-category">Main Course</span><span class="menu-item-price">Rp 145.000</span></div>
+              <h3 class="menu-item-name">Lamb Mandi</h3><p class="menu-item-desc">Daging domba yang dimasak perlahan dengan nasi basmati harum dan rempah khas Timur Tengah.</p>
+            </article>
+            <article class="menu-item reveal reveal-delay-1" tabindex="0" role="button" aria-label="Lihat detail Arabic Mixed Grill">
+              <div class="menu-item-image"><img src="assets/images/mixed-grill.png" alt="Arabic Mixed Grill dengan pilihan daging panggang"></div>
+              <div class="menu-item-meta"><span class="menu-item-category">Main Course</span><span class="menu-item-price">Rp 168.000</span></div>
+              <h3 class="menu-item-name">Arabic Mixed Grill</h3><p class="menu-item-desc">Pilihan daging panggang dengan nasi saffron, rempah, dan herba segar.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="menu-category" id="main-course">
+          <div class="menu-category-heading"><span class="label">Dari Dapur Kami</span><h2 class="section-heading">Main Course</h2></div>
+          <div class="menu-list">
+            <article class="menu-list-item" tabindex="0" role="button" aria-label="Lihat detail Shawarma Platter"><div class="menu-list-image"><img src="assets/images/shawarma.png" alt="Shawarma Platter dengan pita dan saus khas"></div><div class="menu-list-content"><h3>Shawarma Platter</h3><p>Ayam berbumbu, pita hangat, salad, dan saus khas Zamzam.</p></div><span>Rp 89.000</span></article>
+            <article class="menu-list-item" tabindex="0" role="button" aria-label="Lihat detail Chicken Kabsa"><div class="menu-list-image"><img src="assets/images/lamb-mandi.png" alt="Chicken Kabsa dengan nasi basmati berbumbu"></div><div class="menu-list-content"><h3>Chicken Kabsa</h3><p>Nasi basmati berbumbu dengan ayam panggang yang lembut.</p></div><span>Rp 95.000</span></article>
+            <article class="menu-list-item" tabindex="0" role="button" aria-label="Lihat detail Beef Kofta Plate"><div class="menu-list-image"><img src="assets/images/mixed-grill.png" alt="Beef Kofta Plate dengan daging panggang dan hummus"></div><div class="menu-list-content"><h3>Beef Kofta Plate</h3><p>Kofta daging sapi panggang dengan hummus dan roti pita.</p></div><span>Rp 98.000</span></article>
+            <article class="menu-list-item" tabindex="0" role="button" aria-label="Lihat detail Chicken Biryani"><div class="menu-list-image"><img src="assets/images/about2.png" alt="Chicken Biryani dengan nasi aromatik dan ayam"></div><div class="menu-list-content"><h3>Chicken Biryani</h3><p>Nasi aromatik dengan ayam, saffron, dan acar segar.</p></div><span>Rp 92.000</span></article>
+          </div>
+        </div>
+
+        <div class="menu-category menu-category-split" id="appetizer">
+          <div class="menu-category-heading"><span class="label">Untuk Berbagi</span><h2 class="section-heading">Appetizer</h2></div>
+          <div class="menu-list">
+            <article class="menu-list-item" tabindex="0" role="button" aria-label="Lihat detail Hummus dan Pita"><div class="menu-list-image"><img src="assets/images/about.png" alt="Hummus dan pita hangat untuk berbagi"></div><div class="menu-list-content"><h3>Hummus & Pita</h3><p>Hummus lembut, minyak zaitun, dan pita hangat.</p></div><span>Rp 48.000</span></article>
+            <article class="menu-list-item" tabindex="0" role="button" aria-label="Lihat detail Falafel Bites"><div class="menu-list-image"><img src="assets/images/shawarma.png" alt="Falafel Bites dengan tahini dan salad segar"></div><div class="menu-list-content"><h3>Falafel Bites</h3><p>Falafel renyah dengan tahini dan salad segar.</p></div><span>Rp 52.000</span></article>
+            <article class="menu-list-item" tabindex="0" role="button" aria-label="Lihat detail Arabic Mezze"><div class="menu-list-image"><img src="assets/images/mixed-grill.png" alt="Arabic Mezze dengan hummus dan pita"></div><div class="menu-list-content"><h3>Arabic Mezze</h3><p>Pilihan hummus, baba ghanoush, tabbouleh, dan pita.</p></div><span>Rp 75.000</span></article>
+          </div>
+        </div>
+
+        <div class="menu-category menu-category-split" id="dessert">
+          <div class="menu-category-heading"><span class="label">Akhiri dengan Manis</span><h2 class="section-heading">Dessert</h2></div>
+          <div class="menu-grid">
+            <article class="menu-item reveal" tabindex="0" role="button" aria-label="Lihat detail Pistachio Baklava">
+              <div class="menu-item-image"><img src="assets/images/baklava.png" alt="Pistachio Baklava dengan pastry renyah"></div>
+              <div class="menu-item-meta"><span class="menu-item-category">Dessert</span><span class="menu-item-price">Rp 45.000</span></div>
+              <h3 class="menu-item-name">Pistachio Baklava</h3><p class="menu-item-desc">Pastry renyah berlapis pistachio dan sirup orange blossom.</p>
+            </article>
+            <article class="menu-item reveal reveal-delay-1" tabindex="0" role="button" aria-label="Lihat detail Arabic Date Cake">
+              <div class="menu-item-image"><img src="assets/images/about1.png" alt="Arabic Date Cake dengan kurma dan saus karamel"></div>
+              <div class="menu-item-meta"><span class="menu-item-category">Dessert</span><span class="menu-item-price">Rp 42.000</span></div>
+              <h3 class="menu-item-name">Arabic Date Cake</h3><p class="menu-item-desc">Kue kurma lembut dengan saus karamel dan es krim vanilla.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="menu-category" id="beverage">
+          <div class="menu-category-heading"><span class="label">Teman Bersantai</span><h2 class="section-heading">Beverage</h2></div>
+          <div class="menu-list menu-list-drinks">
+            <article class="menu-list-item" tabindex="0" role="button" aria-label="Lihat detail Arabic Coffee"><div class="menu-list-image"><img src="assets/images/hero1.png" alt="Arabic Coffee disajikan hangat"></div><div class="menu-list-content"><h3>Arabic Coffee</h3><p>Kopi arabika beraroma cardamom, disajikan hangat.</p></div><span>Rp 35.000</span></article>
+            <article class="menu-list-item" tabindex="0" role="button" aria-label="Lihat detail Mint Tea"><div class="menu-list-image"><img src="assets/images/about2.png" alt="Mint Tea dengan daun mint segar"></div><div class="menu-list-content"><h3>Mint Tea</h3><p>Teh hijau dengan daun mint segar dan madu.</p></div><span>Rp 32.000</span></article>
+            <article class="menu-list-item" tabindex="0" role="button" aria-label="Lihat detail Rose Lemonade"><div class="menu-list-image"><img src="assets/images/hero.png" alt="Rose Lemonade yang menyegarkan"></div><div class="menu-list-content"><h3>Rose Lemonade</h3><p>Perpaduan lemon, rose, dan soda yang menyegarkan.</p></div><span>Rp 38.000</span></article>
+            <article class="menu-list-item" tabindex="0" role="button" aria-label="Lihat detail Zamzam Mocktail"><div class="menu-list-image"><img src="assets/images/about1.png" alt="Zamzam Mocktail dengan buah tropis"></div><div class="menu-list-content"><h3>Zamzam Mocktail</h3><p>Racikan buah tropis dengan sentuhan rempah khas.</p></div><span>Rp 45.000</span></article>
+          </div>
+        </div>
+
+        <div class="menu-note"><span class="label">Catatan</span><p>Harga belum termasuk pajak dan service. Ketersediaan menu dapat berubah. Silakan hubungi kami untuk informasi alergi dan reservasi.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal menu-detail-modal" id="menu-detail-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="menu-detail-title">
+    <div class="modal-backdrop js-close-menu-detail"></div>
+    <div class="modal-box menu-detail-box">
+      <button type="button" class="modal-close js-close-menu-detail" aria-label="Tutup detail menu">×</button>
+      <div class="menu-detail-image">
+        <img id="menu-detail-image" src="" alt="">
+      </div>
+      <div class="menu-detail-content">
+        <span class="label" id="menu-detail-category"></span>
+        <h2 class="modal-title" id="menu-detail-title"></h2>
+        <p class="menu-detail-description" id="menu-detail-description"></p>
+        <span class="menu-detail-price" id="menu-detail-price"></span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer" id="kontak" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col"><div class="footer-brand-name">ZAMZAM</div><div class="footer-brand-sub">Cafe & Shisha Lounge</div><p class="footer-brand-desc">Cita rasa Timur Tengah, hospitality yang hangat, dan ruang untuk menciptakan momen yang berkesan.</p></div>
+        <div class="footer-col"><h4 class="footer-col-title">Navigasi</h4><a href="index.html">Beranda</a><a href="menu.html">Menu</a><a href="index.html#tennis">Tennis Court</a><a href="index.html#lokasi">Lokasi</a><a href="index.html#reservasi">Reservasi</a></div>
+        <div class="footer-col"><h4 class="footer-col-title">Kontak</h4><p>Jakarta, Indonesia</p><a href="tel:+622100000000">+62 21 0000 0000</a><a href="mailto:hello@zamzam.example">hello@zamzam.example</a></div>
+        <div class="footer-col"><h4 class="footer-col-title">Jam Operasional</h4><div class="footer-hours"><strong>Buka Setiap Hari</strong>11.00–23.59 WIB</div></div>
+      </div>
+      <div class="footer-bottom"><p class="footer-copyright">© <span id="current-year">2026</span> Zamzam Cafe & Shisha Lounge. Hak cipta dilindungi.</p><div class="footer-legal"><a href="#">Kebijakan Privasi</a><a href="#">Syarat & Ketentuan</a></div></div>
+    </div>
+  </footer>
+  <script src="js/script.js"></script>
+</body>
+</html>

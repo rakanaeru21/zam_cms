@@ -1,21 +1,16 @@
 
 document.addEventListener('DOMContentLoaded', () => {
-  // ==========================================
   // KONFIGURASI SANITY
-  // ==========================================
-
   const PROJECT_ID = 'tly2hu5w';
   const DATASET = 'production';
   const API_VERSION = '2025-01-01';
 
   const catalog = document.getElementById('menu-catalog-content');
-
   if (!catalog) return;
 
-  // ==========================================
-  // QUERY SANITY
-  // ==========================================
+  const menuData = new Map();
 
+  // QUERY SANITY
   const query = `*[_type == "menuCategory" && coalesce(isActive, true) == true]
     | order(order asc) {
       _id,
@@ -23,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
       slug,
       description,
       eyebrow,
-
       "items": *[
         _type == "menuItem" &&
         category._ref == ^._id &&
@@ -44,10 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const endpoint =
     `https://${PROJECT_ID}.api.sanity.io/v${API_VERSION}/data/query/${DATASET}?query=${encodeURIComponent(query)}`;
 
-  // ==========================================
-  // HELPER FUNCTIONS
-  // ==========================================
-
+  // HELPER
   const escapeHTML = (value = '') => {
     return String(value).replace(/[&<>"']/g, char => ({
       '&': '&amp;',
@@ -58,16 +49,17 @@ document.addEventListener('DOMContentLoaded', () => {
     })[char]);
   };
 
-  const formatPrice = price => {
-    return `Rp ${Number(price || 0).toLocaleString('id-ID')}`;
-  };
+  const formatPrice = price =>
+    `Rp ${Number(price || 0).toLocaleString('id-ID')}`;
 
-  // ==========================================
-  // TEMPLATE KARTU MENU
-  // ==========================================
-
+  // KARTU MENU
   function createMenuCard(item, categoryTitle) {
     const image = item.image?.asset?.url || '';
+
+    menuData.set(item._id, {
+      ...item,
+      categoryTitle
+    });
 
     return `
       <article
@@ -77,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
         data-menu-id="${escapeHTML(item._id)}"
         aria-label="Lihat detail ${escapeHTML(item.name)}"
       >
-
         <div class="menu-item-image">
           <img
             src="${escapeHTML(image)}"
@@ -87,46 +78,33 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <div class="menu-item-meta">
-
           <span class="menu-item-category">
-            ${item.isFeatured
-              ? 'Signature'
-              : escapeHTML(categoryTitle)}
+            ${item.isFeatured ? 'Signature' : escapeHTML(categoryTitle)}
           </span>
 
           <span class="menu-item-price">
             ${formatPrice(item.price)}
           </span>
-
         </div>
 
         <h3 class="menu-item-name">
           ${escapeHTML(item.name)}
         </h3>
-
-        <p class="menu-item-desc">
-          ${escapeHTML(item.description || '')}
-        </p>
-
       </article>
     `;
   }
 
-  // ==========================================
-  // RENDER KATEGORI DAN MENU UNGGULAN
-  // ==========================================
-
+  // RENDER KATEGORI
   function renderCategories(categories) {
     if (!categories.length) {
       catalog.innerHTML = `
-        <p class="section-desc">
-          Belum ada kategori menu yang tersedia.
-        </p>
+        <p class="section-desc">Belum ada kategori menu yang tersedia.</p>
       `;
       return;
     }
 
-    // Navigasi kategori
+    menuData.clear();
+
     const navigation = `
       <nav class="menu-categories" aria-label="Kategori menu">
         ${categories.map(category => `
@@ -137,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
       </nav>
     `;
 
-    // Mengumpulkan menu unggulan dari semua kategori
     const featuredItems = categories.flatMap(category =>
       (category.items || [])
         .filter(item => item.isFeatured === true)
@@ -147,18 +124,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }))
     );
 
-    // Section Menu Unggulan
-    const featuredSection = featuredItems.length > 0
+    const featuredSection = featuredItems.length
       ? `
         <section class="menu-featured-section">
-
           <div class="menu-category-heading">
             <span class="label">Pilihan Spesial</span>
-
-            <h2 class="section-heading">
-              Menu Unggulan
-            </h2>
-
+            <h2 class="section-heading">Menu Unggulan</h2>
             <p class="section-desc">
               Pilihan spesial yang menjadi favorit di Zamzam.
             </p>
@@ -169,31 +140,22 @@ document.addEventListener('DOMContentLoaded', () => {
               createMenuCard(item, item.categoryTitle)
             ).join('')}
           </div>
-
         </section>
       `
       : '';
 
-    // Section setiap kategori
     const sections = categories.map(category => {
       const slug = category.slug?.current;
-
       if (!slug) return '';
 
       const items = category.items || [];
 
       return `
-        <section
-          class="menu-category"
-          id="${escapeHTML(slug)}"
-        >
-
+        <section class="menu-category" id="${escapeHTML(slug)}">
           <div class="menu-category-heading">
-
             ${category.eyebrow
               ? `<span class="label">${escapeHTML(category.eyebrow)}</span>`
-              : ''
-            }
+              : ''}
 
             <h2 class="section-heading">
               ${escapeHTML(category.title)}
@@ -201,35 +163,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
             ${category.description
               ? `<p class="section-desc">${escapeHTML(category.description)}</p>`
-              : ''
-            }
-
+              : ''}
           </div>
 
           <div class="menu-grid">
-
-            ${items.length > 0
+            ${items.length
               ? items.map(item =>
                   createMenuCard(item, category.title)
                 ).join('')
-              : `
-                <p class="section-desc">
-                  Belum ada menu dalam kategori ini.
-                </p>
-              `
+              : `<p class="section-desc">Belum ada menu dalam kategori ini.</p>`
             }
-
           </div>
-
         </section>
       `;
     }).join('');
 
-    // Gabungkan seluruh tampilan
-    catalog.innerHTML =
-      navigation + featuredSection + sections;
+    catalog.innerHTML = navigation + featuredSection + sections;
 
-    // Navigasi kategori
+    // NAVIGASI KATEGORI
     catalog.querySelectorAll('.menu-categories a').forEach(link => {
       link.addEventListener('click', event => {
         const targetId = decodeURIComponent(
@@ -237,7 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
         );
 
         const target = document.getElementById(targetId);
-
         if (!target) return;
 
         event.preventDefault();
@@ -252,34 +202,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ==========================================
-  // MEMUAT DATA DARI SANITY
-  // ==========================================
-
+  // MEMUAT DATA
   async function loadMenu() {
     try {
       catalog.innerHTML = `
-        <p class="section-desc">
-          Memuat daftar menu...
-        </p>
+        <p class="section-desc">Memuat daftar menu...</p>
       `;
 
       const response = await fetch(endpoint);
 
       if (!response.ok) {
-        const errorDetail = await response.text();
-
-        throw new Error(
-          `Sanity API error: ${response.status} - ${errorDetail}`
-        );
+        throw new Error(`Sanity API error: ${response.status}`);
       }
 
       const result = await response.json();
 
-      console.log(
-        'Data kategori dan menu dari Sanity:',
-        result.result
-      );
+      console.log('Data Sanity:', result.result);
 
       renderCategories(result.result || []);
 
@@ -294,20 +232,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ==========================================
-  // DETAIL MENU
-  // ==========================================
+  // MEMBUKA DETAIL MENU
+  function openMenuDetail(menuId) {
+    const item = menuData.get(menuId);
+    if (!item) return;
 
-  function openMenuDetail(item) {
     const modal = document.getElementById('menu-detail-modal');
-
     if (!modal) return;
-
-    const image = item.querySelector('img');
-    const title = item.querySelector('.menu-item-name');
-    const description = item.querySelector('.menu-item-desc');
-    const price = item.querySelector('.menu-item-price');
-    const category = item.querySelector('.menu-item-category');
 
     const detailImage = document.getElementById('menu-detail-image');
     const detailTitle = document.getElementById('menu-detail-title');
@@ -316,28 +247,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const detailCategory = document.getElementById('menu-detail-category');
 
     if (detailImage) {
-      detailImage.src = image?.src || '';
-      detailImage.alt = image?.alt || '';
+      detailImage.src = item.image?.asset?.url || '';
+      detailImage.alt = item.name || '';
     }
 
     if (detailTitle) {
-      detailTitle.textContent =
-        title?.textContent.trim() || '';
+      detailTitle.textContent = item.name || '';
     }
 
     if (detailDescription) {
       detailDescription.textContent =
-        description?.textContent.trim() || '';
+        item.description || 'Belum ada deskripsi untuk menu ini.';
     }
 
     if (detailPrice) {
-      detailPrice.textContent =
-        price?.textContent.trim() || '';
+      detailPrice.textContent = formatPrice(item.price);
     }
 
     if (detailCategory) {
-      detailCategory.textContent =
-        category?.textContent.trim() || '';
+      detailCategory.textContent = item.isFeatured
+        ? 'Signature'
+        : item.categoryTitle || '';
     }
 
     modal.classList.add('active');
@@ -345,9 +275,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('modal-open');
   }
 
+  // MENUTUP DETAIL
   function closeMenuDetail() {
     const modal = document.getElementById('menu-detail-modal');
-
     if (!modal) return;
 
     modal.classList.remove('active');
@@ -355,45 +285,33 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.remove('modal-open');
   }
 
-  // ==========================================
-  // EVENT LISTENERS
-  // ==========================================
-
-  // Klik kartu menu
+  // EVENT KLIK KARTU
   catalog.addEventListener('click', event => {
-    const item = event.target.closest('[data-menu-id]');
+    const card = event.target.closest('[data-menu-id]');
+    if (!card) return;
 
-    if (!item) return;
-
-    openMenuDetail(item);
+    openMenuDetail(card.dataset.menuId);
   });
 
-  // Keyboard Enter dan Space
+  // EVENT KEYBOARD
   catalog.addEventListener('keydown', event => {
-    const item = event.target.closest('[data-menu-id]');
+    const card = event.target.closest('[data-menu-id]');
 
-    if (!item || !['Enter', ' '].includes(event.key)) return;
+    if (!card || !['Enter', ' '].includes(event.key)) return;
 
     event.preventDefault();
-
-    openMenuDetail(item);
+    openMenuDetail(card.dataset.menuId);
   });
 
-  // Tombol tutup modal
+  // TOMBOL TUTUP
   document.querySelectorAll('.js-close-menu-detail').forEach(button => {
     button.addEventListener('click', closeMenuDetail);
   });
 
-  // Tombol Escape
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape') {
-      closeMenuDetail();
-    }
+    if (event.key === 'Escape') closeMenuDetail();
   });
 
-  // ==========================================
   // JALANKAN
-  // ==========================================
-
   loadMenu();
 });
